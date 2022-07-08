@@ -1,11 +1,28 @@
 const Pool = require('pg').Pool;
-const pool = new Pool({
-  user: 'me',
-  host: 'localhost',
-  database: 'api2',
-  password: '12345',
-  port: 5432,
-});
+require('dotenv').config()
+
+const user = process.env.USER_DB
+const password = process.env.PASSWORD
+const host = process.env.HOST
+const database = process.env.DATABASE
+const port = process.env.PORT
+
+
+const pool = new Pool({ user, database, host, password, port });
+
+const initializeTable = () => {
+  pool.query(`CREATE TABLE IF NOT EXISTS users (
+  id  SERIAL PRIMARY KEY,
+  name varchar(45) NOT NULL,
+  email varchar(450) NOT NULL
+  )`, (error, results) => {
+    if (error) {
+      throw error;
+    }
+    console.log('Table USERS was initialized')
+  });
+}
+
 const getUsers = (request, response) => {
   pool.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {
     if (error) {
@@ -67,6 +84,8 @@ const deleteUser = (request, response) => {
     response.status(200).send(`User deleted with ID: ${id}`);
   });
 };
+
+pool.connect(initializeTable)
 
 module.exports = {
   getUsers,
