@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: app_api 
+    image: danylokaniev/clientservice:postgress-app-v1.1
+    restart: always
+    environment:
+      - DB_URL=postgres://postgres:postgres@localhost:5432/postgres
+    ports:
+      - '3000:3000'
+    networks:
+      - app_api 
+networks:
+  app_api:
+    name: api

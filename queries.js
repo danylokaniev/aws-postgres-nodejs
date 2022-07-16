@@ -1,14 +1,9 @@
 const Pool = require('pg').Pool;
 require('dotenv').config()
 
-const user = process.env.USER_DB
-const password = process.env.PASSWORD
-const host = process.env.HOST
-const database = process.env.DATABASE
-const port = process.env.PORT
+const connectionString = process.env.DB_URL
 
-
-const pool = new Pool({ user, database, host, password, port });
+const pool = new Pool({connectionString});
 
 const initializeTable = () => {
   pool.query(`CREATE TABLE IF NOT EXISTS users (
